@@ -8,20 +8,25 @@ from confluent_kafka.schema_registry.json_schema import JSONSerializer
 #from confluent_kafka.schema_registry import *
 import pandas as pd
 from typing import List
+import os, sys
+
+from dotenv import load_dotenv
+print(f"Reading Environment Variables")
+load_dotenv()
 
 FILE_PATH = r"/config/workspace/cardekho_dataset.csv"
 columns = ['car_name', 'brand', 'model', 'vehicle_age', 'km_driven', 'seller_type',
        'fuel_type', 'transmission_type', 'mileage', 'engine', 'max_power',
        'seats', 'selling_price']
 
-API_KEY = 'HNUA2KUYENIP44PV'
-ENDPOINT_SCHEMA_URL  = 'https://psrc-35wr2.us-central1.gcp.confluent.cloud'
-API_SECRET_KEY = 'TH5n14kG1JAD6b8rmf92Y6wyXPY66De2kzbiZUS0jytRfkxpEM4rWdlGVSsM/nFR'
-BOOTSTRAP_SERVER = 'pkc-lzvrd.us-west4.gcp.confluent.cloud:9092'
-SECURITY_PROTOCOL = 'SASL_SSL'
-SSL_MACHENISM = 'PLAIN'
-SCHEMA_REGISTRY_API_KEY = 'PBEUUAHOC2GTPJWT'
-SCHEMA_REGISTRY_API_SECRET = 'EuAq+lp9CJYCs2n/TKOdhk9C2bbMl0ZRyE6KfYJ0v2Ng6anqHnLzqAtCjSwMSE+Y'
+API_KEY = os.getenv("API_KEY")
+ENDPOINT_SCHEMA_URL  = os.getenv("ENDPOINT_SCHEMA_URL")
+API_SECRET_KEY = os.getenv("API_SECRET_KEY")
+BOOTSTRAP_SERVER = os.getenv("BOOTSTRAP_SERVER")
+SECURITY_PROTOCOL = os.getenv("SECURITY_PROTOCOL")
+SSL_MACHENISM = os.getenv("SSL_MACHENISM")
+SCHEMA_REGISTRY_API_KEY = os.getenv("SCHEMA_REGISTRY_API_KEY")
+SCHEMA_REGISTRY_API_SECRET = os.getenv("SCHEMA_REGISTRY_API_SECRET")
 
 
 def sasl_conf():
@@ -176,6 +181,7 @@ def main(topic):
         # Serve on_delivery callbacks from previous calls to produce()
     producer.poll(0.0)
     try:
+        #count=0
         for car in get_car_instance(file_path=FILE_PATH):
 
             print(car)
@@ -183,7 +189,9 @@ def main(topic):
                             key=string_serializer(str(uuid4()), car_to_dict),
                             value=json_serializer(car, SerializationContext(topic, MessageField.VALUE)),
                             on_delivery=delivery_report)
-            break
+            #if count == 1000:
+              #break
+            #count = count + 1
     except KeyboardInterrupt:
         pass
     except ValueError:
@@ -193,4 +201,4 @@ def main(topic):
     print("\nFlushing records...")
     producer.flush()
 
-main("test_topic")
+main("car-dekho")

@@ -1,19 +1,23 @@
 import argparse
-
+import os, sys
 from confluent_kafka import Consumer
 from confluent_kafka.serialization import SerializationContext, MessageField
 from confluent_kafka.schema_registry.json_schema import JSONDeserializer
 
 
-API_KEY = 'TQJPA4A4ASHUHLZH'
-ENDPOINT_SCHEMA_URL  = 'https://psrc-lg26v.westeurope.azure.confluent.cloud'
-API_SECRET_KEY = 'v0fLQUsAKxjoHOZIP3QUhrQ33zSi3jXsQQzWc5r8ehyu2gPnKHy6I9kHcgJ3oxeD'
-BOOTSTRAP_SERVER ='pkc-l7pr2.ap-south-1.aws.confluent.cloud:9092'
-SECURITY_PROTOCOL = 'SASL_SSL'
-SSL_MACHENISM = 'PLAIN'
-SCHEMA_REGISTRY_API_KEY ='S4RBSOPN2VLULBNW'
-SCHEMA_REGISTRY_API_SECRET = 'ibNCIyn4tIAl7Jkx5P0iU7D67dmbqrHKyJlNSVc3/b8458CoYNshQVqsq8hnjRky'
+from dotenv import load_dotenv
+print(f"Reading Environment Variables")
+load_dotenv()
 
+
+API_KEY = os.getenv("API_KEY")
+ENDPOINT_SCHEMA_URL  = os.getenv("ENDPOINT_SCHEMA_URL")
+API_SECRET_KEY = os.getenv("API_SECRET_KEY")
+BOOTSTRAP_SERVER = os.getenv("BOOTSTRAP_SERVER")
+SECURITY_PROTOCOL = os.getenv("SECURITY_PROTOCOL")
+SSL_MACHENISM = os.getenv("SSL_MACHENISM")
+SCHEMA_REGISTRY_API_KEY = os.getenv("SCHEMA_REGISTRY_API_KEY")
+SCHEMA_REGISTRY_API_SECRET = os.getenv("SCHEMA_REGISTRY_API_SECRET")
 
 
 
@@ -150,4 +154,4 @@ def main(topic):
 
     consumer.close()
 
-main("fsds-nov")
+main("car-dekho")
